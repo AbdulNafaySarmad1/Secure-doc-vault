@@ -1,93 +1,308 @@
-# SecureVault - Docker Deployment
+SecureVault
 
-## 🚀 Quick Start (3 Commands)
+Production-Ready Encrypted Notes & File Management System
 
-```bash
-# 1. Extract the zip
-cd securevault-docker-ready
+SecureVault is a full-stack, security-focused application for managing encrypted notes and files. It implements modern authentication flows, strong encryption standards, and defensive security practices designed to mitigate common web application attacks.
 
-# 2. Start everything
-./start.sh
+This project demonstrates secure system design, layered architecture, and production-aware deployment practices.
 
-# 3. Open browser
-http://localhost:3000
-```
+🔐 Core Features
+Authentication & Session Security
 
-## 🔑 Default Credentials
+JWT access tokens (15-minute expiry)
 
-- **Admin**: admin@securevault.test / Admin@123
-- **User**: user@securevault.test / User@123
+Refresh token rotation with token family detection
 
-## 📋 What's Included
+Automatic refresh token revocation on reuse (replay attack mitigation)
 
-- ✅ PostgreSQL database (auto-configured)
-- ✅ Backend API (Node.js/Express)
-- ✅ Frontend (React)
-- ✅ All environment variables pre-configured
-- ✅ Auto database seeding
+bcrypt password hashing (cost factor 12)
 
-## 🛠️ Requirements
+Role-Based Access Control (Admin, User, Guest)
 
-- Docker Desktop (running)
-- Docker Compose
+Password reset with time-limited tokens
 
-## 📊 Services
+Data Protection
 
-| Service | URL | Description |
-|---------|-----|-------------|
-| Frontend | http://localhost:3000 | React app |
-| Backend API | http://localhost:5000 | Express API |
-| PostgreSQL | localhost:5432 | Database |
+AES-256-GCM encryption for notes at rest
 
-## 🛑 Stop Everything
+Authenticated encryption with IV + authentication tag storage
 
-```bash
-docker-compose down
-```
+UUIDs instead of sequential IDs
 
-## 🔄 Restart
+Strict ownership checks to prevent IDOR
 
-```bash
-docker-compose down
-docker-compose up --build -d
-```
+Randomized filenames for uploaded files
 
-## 📜 View Logs
+File type validation (JPEG, PNG, PDF)
 
-```bash
-# All services
-docker-compose logs -f
+5MB upload limit
 
-# Just backend
-docker-compose logs -f backend
+API Hardening
 
-# Just database
-docker-compose logs -f postgres
-```
+express-validator input validation
 
-## 💾 Data Persistence
+Parameterized queries via Sequelize ORM
 
-Database data is stored in a Docker volume (`postgres_data`).
-It persists even if you stop the containers.
+Mass assignment protection
 
-To reset everything (including database):
-```bash
-docker-compose down -v
-```
+Rate limiting:
 
-## 🐛 Troubleshooting
+Auth endpoints: 5 attempts / 15 min
 
-**Port already in use?**
-- Change ports in docker-compose.yml:
-  - `5000:10000` → `5001:10000` (backend)
-  - `3000:80` → `3001:80` (frontend)
-  - `5432:5432` → `5433:5432` (database)
+Password reset: 3 attempts / hour
 
-**Docker not running?**
-- Start Docker Desktop first!
+General API: 100 requests / 15 min
 
-**Build fails?**
-```bash
-docker-compose down --rmi all
+Explicit CORS configuration
+
+Helmet security headers
+
+Content Security Policy (CSP)
+
+HSTS and X-Frame-Options enabled
+
+Audit & Monitoring
+
+Immutable audit logging for sensitive actions
+
+IP address and user-agent logging
+
+Admin dashboard for log review
+
+No edit/delete endpoints for audit records
+
+🏗️ Architecture
+Backend
+
+Node.js 18
+
+Express.js
+
+PostgreSQL 15
+
+Sequelize ORM
+
+Layered architecture:
+
+Controllers
+
+Middleware
+
+Services
+
+Models
+
+Routes
+
+Frontend
+
+React 18
+
+React Query
+
+Zustand
+
+Tailwind CSS
+
+Deployment
+
+Docker
+
+Docker Compose
+
+Nginx reverse proxy
+
+PostgreSQL Docker volume for persistence
+
+🛡️ Threat Model
+
+SecureVault is designed to mitigate:
+
+SQL Injection
+
+IDOR (Insecure Direct Object Reference)
+
+Token replay attacks
+
+Brute force login attempts
+
+CSRF (via SameSite + CORS strategy)
+
+XSS (CSP + validation)
+
+Mass assignment
+
+Directory traversal
+
+Stolen database dump (encrypted note content)
+
+Not covered:
+
+Compromised server root access
+
+Infrastructure-level attacks (requires external hardening)
+
+🔑 Encryption Model
+
+Notes are encrypted using AES-256-GCM.
+
+For each note:
+
+A unique IV is generated
+
+Ciphertext, IV, and authentication tag are stored
+
+Encryption key is provided via environment variable
+
+Decryption occurs only after authorization checks
+
+AES-GCM provides:
+
+Confidentiality
+
+Integrity
+
+Authentication of encrypted data
+
+📦 Project Structure
+securevault/
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── scripts/
+│   │   └── server.js
+│   ├── uploads/
+│   ├── Dockerfile
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── Dockerfile
+│   └── package.json
+└── docker-compose.yml
+🚀 Quick Start (Docker)
+Requirements
+
+Docker Desktop
+
+Docker Compose
+
+Run the Application
+git clone <repository-url>
+cd securevault
+
+# Create .env file in root directory
+cat > .env << EOF
+DB_PASSWORD=your_secure_db_password
+JWT_SECRET=your_super_secret_jwt_key_min_32_chars
+JWT_REFRESH_SECRET=your_different_refresh_secret_key
+ENCRYPTION_KEY=your_exact_32_byte_key_here
+EOF
+
 docker-compose up --build
-```
+Access
+
+Frontend:
+http://localhost:3000
+
+Backend API:
+http://localhost:5000
+
+🔑 Demo Credentials (Development Only)
+
+These credentials are seeded for local development and testing only.
+
+Admin:
+
+Email: admin@securevault.test
+
+Password: Admin@123
+
+User:
+
+Email: user@securevault.test
+
+Password: User@123
+
+🛠️ Local Development (Without Docker)
+Backend
+cd backend
+npm install
+cp .env.example .env
+npm run db:migrate
+npm run db:seed
+npm run dev
+Frontend
+cd frontend
+npm install
+npm start
+📋 API Overview
+Authentication
+
+POST /api/auth/register
+
+POST /api/auth/login
+
+POST /api/auth/refresh
+
+POST /api/auth/logout
+
+POST /api/auth/password-reset
+
+POST /api/auth/reset-password
+
+Notes
+
+GET /api/notes
+
+POST /api/notes
+
+GET /api/notes/:id
+
+PUT /api/notes/:id
+
+DELETE /api/notes/:id
+
+Files
+
+GET /api/files
+
+POST /api/files/upload
+
+GET /api/files/:id/download
+
+DELETE /api/files/:id
+
+Admin
+
+GET /api/users
+
+PUT /api/users/:id
+
+GET /api/audit/all
+
+Audit
+
+GET /api/audit/my-logs
+
+📊 Design Decisions
+Why Refresh Token Rotation?
+
+Refresh token rotation prevents replay attacks by:
+
+Revoking the old refresh token immediately
+
+Issuing a new refresh token within the same family
+
+Revoking the entire family if a reused token is detected
+
+This protects against stolen refresh tokens while maintaining usability.
+
+📄 License
+
+This project was built for technical demonstration and assessment purposes.
