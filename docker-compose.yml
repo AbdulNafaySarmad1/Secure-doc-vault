@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: securevault-db
+    environment:
+      POSTGRES_USER: securevault
+      POSTGRES_PASSWORD: securevault123
+      POSTGRES_DB: securevault
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: securevault-api
+    environment:
+      NODE_ENV: production
+      PORT: 10000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: securevault
+      DB_USER: securevault
+      DB_PASSWORD: securevault123
+      JWT_SECRET: 4BrtrVUs3W1RC01lDBWycJDaL0sifsCbfNlMbBa0k2ZmnOUD2N5gqwt_c19Mmm_TmMxeurfT7xu5CyRl1Qh08w
+      JWT_REFRESH_SECRET: F2YGivbJLBaM711aE54rQLYrirtnwI7j8j24jU9VX9PCjV4PRFAyNf_kbWNOYiYsXp_x_1oNrIimPUW-yhUg7A
+      ENCRYPTION_KEY: mU%5Q7g@NRl3hfVU93&DzfZB4B^hj*KM
+      CLIENT_URL: http://localhost:3000
+    ports:
+      - "5000:10000"
+    depends_on:
+      - postgres
+    command: sh -c "sleep 5 && node src/server.js"
+
+  frontend:
+    build: ./frontend
+    container_name: securevault-web
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
