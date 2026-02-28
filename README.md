@@ -1,12 +1,12 @@
-SecureVault
+**SecureVault**
 
-Production-Ready Encrypted Notes & File Management System
+**Production-Ready Encrypted Notes & File Management System**
 
 SecureVault is a full-stack, security-focused application for managing encrypted notes and files. It implements modern authentication flows, strong encryption standards, and defensive security practices designed to mitigate common web application attacks.
 
 This project demonstrates secure system design, layered architecture, and production-aware deployment practices.
 
-🔐 Core Features
+🔐 **Core Features**
 Authentication & Session Security
 
 JWT access tokens (15-minute expiry)
@@ -21,7 +21,7 @@ Role-Based Access Control (Admin, User, Guest)
 
 Password reset with time-limited tokens
 
-Data Protection
+**Data Protection**
 
 AES-256-GCM encryption for notes at rest
 
@@ -37,7 +37,7 @@ File type validation (JPEG, PNG, PDF)
 
 5MB upload limit
 
-API Hardening
+**API Hardening**
 
 express-validator input validation
 
@@ -61,7 +61,7 @@ Content Security Policy (CSP)
 
 HSTS and X-Frame-Options enabled
 
-Audit & Monitoring
+**Audit & Monitoring**
 
 Immutable audit logging for sensitive actions
 
@@ -71,8 +71,8 @@ Admin dashboard for log review
 
 No edit/delete endpoints for audit records
 
-🏗️ Architecture
-Backend
+🏗️ **Architecture**
+**Backend**
 
 Node.js 18
 
@@ -94,7 +94,7 @@ Models
 
 Routes
 
-Frontend
+**Frontend**
 
 React 18
 
@@ -104,7 +104,7 @@ Zustand
 
 Tailwind CSS
 
-Deployment
+**Deployment**
 
 Docker
 
@@ -114,7 +114,7 @@ Nginx reverse proxy
 
 PostgreSQL Docker volume for persistence
 
-🛡️ Threat Model
+🛡️ **Threat Model**
 
 SecureVault is designed to mitigate:
 
@@ -142,7 +142,7 @@ Compromised server root access
 
 Infrastructure-level attacks (requires external hardening)
 
-🔑 Encryption Model
+🔑 **Encryption Model**
 
 Notes are encrypted using AES-256-GCM.
 
@@ -164,7 +164,7 @@ Integrity
 
 Authentication of encrypted data
 
-📦 Project Structure
+📦 **Project Structure**
 securevault/
 ├── backend/
 │   ├── src/
@@ -185,14 +185,14 @@ securevault/
 │   ├── Dockerfile
 │   └── package.json
 └── docker-compose.yml
-🚀 Quick Start (Docker)
+🚀 **Quick Start (Docker)**
 Requirements
 
 Docker Desktop
 
 Docker Compose
 
-Run the Application
+**Run the Application**
 git clone <repository-url>
 cd securevault
 
@@ -205,7 +205,7 @@ ENCRYPTION_KEY=your_exact_32_byte_key_here
 EOF
 
 docker-compose up --build
-Access
+**Access**
 
 Frontend:
 http://localhost:3000
@@ -213,7 +213,7 @@ http://localhost:3000
 Backend API:
 http://localhost:5000
 
-🔑 Demo Credentials (Development Only)
+🔑 **Demo Credentials (Development Only)**
 
 These credentials are seeded for local development and testing only.
 
@@ -229,7 +229,7 @@ Email: user@securevault.test
 
 Password: User@123
 
-🛠️ Local Development (Without Docker)
+🛠️ **Local Development (Without Docker)**
 Backend
 cd backend
 npm install
@@ -241,7 +241,7 @@ Frontend
 cd frontend
 npm install
 npm start
-📋 API Overview
+📋 **API Overview**
 Authentication
 
 POST /api/auth/register
@@ -256,7 +256,7 @@ POST /api/auth/password-reset
 
 POST /api/auth/reset-password
 
-Notes
+**Notes**
 
 GET /api/notes
 
@@ -268,7 +268,7 @@ PUT /api/notes/:id
 
 DELETE /api/notes/:id
 
-Files
+**Files**
 
 GET /api/files
 
@@ -278,7 +278,7 @@ GET /api/files/:id/download
 
 DELETE /api/files/:id
 
-Admin
+**Admin**
 
 GET /api/users
 
@@ -286,11 +286,11 @@ PUT /api/users/:id
 
 GET /api/audit/all
 
-Audit
+**Audit**
 
 GET /api/audit/my-logs
 
-📊 Design Decisions
+📊 **Design Decisions**
 Why Refresh Token Rotation?
 
 Refresh token rotation prevents replay attacks by:
@@ -303,6 +303,6 @@ Revoking the entire family if a reused token is detected
 
 This protects against stolen refresh tokens while maintaining usability.
 
-📄 License
+📄 **License**
 
 This project was built for technical demonstration and assessment purposes.
